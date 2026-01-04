@@ -1,7 +1,11 @@
 from sqlmodel import SQLModel, create_engine, Session
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # 1. Define the database file name (SQLite is just a file!)
-sqlite_file_name = "nexus.db"
+sqlite_file_name = os.getenv("DB_NAME")
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 
 # 2. Create the engine (The connection manager)
