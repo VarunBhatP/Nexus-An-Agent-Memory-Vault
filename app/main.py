@@ -2,7 +2,9 @@
 from datetime import datetime, timezone
 from fastapi import FastAPI, Depends, HTTPException, Security
 from sqlmodel import Session, col, select
-from typing import Annotated, List 
+from typing import Annotated, List
+
+from app.brain import get_embedding 
 from .database import create_db_and_tables, get_session
 from .models import Memory, MemoryCreate, MemoryUpdate
 from contextlib import asynccontextmanager
@@ -36,10 +38,13 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 @app.post("/memories/", response_model=Memory)
 def create_memory(memory_in: MemoryCreate, session: SessionDep):
-    # 1. Convert Pydantic model to DB model
+    # Convert Pydantic model to DB model
     db_memory = Memory.model_validate(memory_in)
-    
-    # 2. Add the DB model (NOT the Pydantic one)
+    # Generate Vector
+    vector = get_embedding(db_memory.content)
+    # Save it
+    db_memory.embedding = vector
+    # Add the DB model (NOT the Pydantic one)
     session.add(db_memory)
     session.commit()
     session.refresh(db_memory)

@@ -1,7 +1,7 @@
 # models.py
 from datetime import datetime, timezone
-from sqlmodel import SQLModel, Field
-from typing import Optional
+from sqlmodel import SQLModel, Field, JSON, Column
+from typing import List, Optional
 
 # 1. The Base Schema (Shared fields)
 class MemoryBase(SQLModel):
@@ -15,6 +15,8 @@ class Memory(MemoryBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    embedding: Optional[List[float]] = Field(default=None, sa_column=Column(JSON))
+
 # 3. The Create Model (What user sends)
 # We don't need to add anything extra here, it just inherits the score limits.
 class MemoryCreate(MemoryBase):
@@ -25,3 +27,4 @@ class MemoryUpdate(SQLModel):
     category: Optional[str] = None
     importance_score: Optional[int] = None
     # Note: NO id, NO created_at, NO updated_at here!
+
