@@ -20,3 +20,8 @@ venv/
 # OS specific
 .DS_Store
 Thumbs.db
+
+
+*.pyc
+nexus.db
+

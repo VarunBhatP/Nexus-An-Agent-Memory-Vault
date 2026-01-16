@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nexus Memory Search</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white p-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-4xl font-bold mb-8">🧠 Nexus Memory Search</h1>
+        
+        <div class="space-y-4">
+            <input 
+                id="query" 
+                placeholder="Ask about Python, stocks, diet..." 
+                class="w-full p-4 bg-gray-800 rounded-lg text-xl"
+            >
+            <button onclick="search()" class="w-full p-4 bg-blue-600 rounded-lg hover:bg-blue-700">
+                Search Memories
+            </button>
+        </div>
+        
+        <div id="results" class="mt-8 space-y-4"></div>
+    </div>
+
+    <script>
+        async function search() {
+            const q = document.getElementById('query').value;
+            const results = document.getElementById('results');
+            
+            results.innerHTML = '<div class="text-gray-500">Searching...</div>';
+            
+            try {
+                const response = await fetch(`/memories/search?q=${encodeURIComponent(q)}`);
+                const memories = await response.json();
+                
+                if (memories.length === 0) {
+                    results.innerHTML = '<div class="p-8 bg-gray-800 rounded-lg">No memories found</div>';
+                    return;
+                }
+                
+                results.innerHTML = memories.map(m => `
+                    <div class="p-6 bg-gray-800 rounded-lg border-l-4 border-blue-500">
+                        <div class="text-sm text-blue-400">${m.agent_id} • ${m.category}</div>
+                        <div class="mt-2">${m.content}</div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                results.innerHTML = '<div class="text-red-400">Error: ' + e.message + '</div>';
+            }
+        }
+    </script>
+</body>
+</html>

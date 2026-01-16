@@ -1,22 +1,27 @@
-from sqlmodel import SQLModel, create_engine, Session
 import os
+from typing import Generator
 from dotenv import load_dotenv
-
+from sqlmodel import SQLModel, create_engine, Session
 load_dotenv()
+# Neon DATABASE_URL or fallback to SQLite
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-# 1. Define the database 
-db_url = os.getenv("DATABASE_URL")
+# Simple SYNC engine (works with SQLite + Postgres)
+engine = create_engine(
+    DATABASE_URL,
+    echo=False,  # Set True for SQL debug logs
+    pool_pre_ping=True,  # Validates connections
+)
 
-# 2. Create the engine
-connect_args = {"check_same_thread": False} if "sqlite" in db_url else {}
-
-engine = create_engine(db_url, connect_args=connect_args)
-
-# 3. Function to create tables (We call this later in main.py)
 def create_db_and_tables():
+    """Create all tables"""
+    print(f"🔍 Using DATABASE_URL: {DATABASE_URL}")
     SQLModel.metadata.create_all(engine)
 
-# 4. Dependency: Provides a session (connection) to each request
-def get_session():
-    with Session(engine) as session:
+def get_session() -> Generator[Session, None, None]:
+    """Database session dependency"""
+    session = Session(engine)
+    try:
         yield session
+    finally:
+        session.close()
