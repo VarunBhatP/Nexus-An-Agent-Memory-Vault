@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # 1. Define the database 
-db_url = os.getenv("DATABASE_URL", "sqlite:///nexus.db")
+db_url = os.getenv("DATABASE_URL")
 
 # 2. Create the engine
 connect_args = {"check_same_thread": False} if "sqlite" in db_url else {}

@@ -1,10 +1,10 @@
 
 from datetime import datetime, timezone
-from fastapi import FastAPI, Depends, HTTPException, Security
+from fastapi import FastAPI, Depends, HTTPException, Security, Query
 from sqlmodel import Session, col, select
 from typing import Annotated, List
-
-from app.brain import get_embedding 
+import numpy as np
+from app.brain import cosine_similarity, get_embedding 
 from .database import create_db_and_tables, get_session
 from .models import Memory, MemoryCreate, MemoryUpdate
 from contextlib import asynccontextmanager
@@ -73,6 +73,22 @@ def read_memories(
     # Apply offset/limit for pagination
     memories = session.exec(query.offset(offset).limit(limit)).all()
     return memories
+@app.get("/memories/search", response_model=List[Memory])
+def search_memories(   
+    session: SessionDep, 
+    q: str = Query(..., description="Search query"),
+    top_k: int = Query(5, ge=1, le=20)
+):
+    query_vector = get_embedding(q)
+    query = select(Memory).where(Memory.embedding.is_not(None))
+    memories = session.exec(query).all()
+    
+    similarities = [
+        (memory, cosine_similarity(query_vector, memory.embedding))
+        for memory in memories
+    ]
+    similarities.sort(key=lambda x: x[1], reverse=True)
+    return [mem for mem, score in similarities[:top_k]]
 
 @app.get("/memories/{memory_id}", response_model=Memory)
 def read_memory(memory_id: int, session: SessionDep):
@@ -116,3 +132,8 @@ def delete_memory(memory_id: int, session: SessionDep):
     session.delete(memory)
     session.commit()
     return {"ok": True}
+
+
+
+
+
