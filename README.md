@@ -33,10 +33,8 @@ Semantic memory search for agentic AI systems. Shared memory across different ag
 Create .env file as in .env.example file, also create a vitual environment and activate it.
 
 4. Migrate Database
-bash
 - python migrate.py
 5. Run Server
-bash
 - uvicorn app.main:app --reload
 6. Test
 - Frontend: http://localhost:8000/
@@ -44,7 +42,7 @@ bash
 - Add Memory: POST /memories/ (use /docs)
 - Search: Type "NVIDIA" in frontend
 
-## Production
+##Production
 - Persistent Neon Postgres (FREE forever)
 - Docker ready
 - Render deployment (FREE tier)
