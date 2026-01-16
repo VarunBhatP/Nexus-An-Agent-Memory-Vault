@@ -17,36 +17,38 @@ Semantic memory search for agentic AI systems. Shared memory across different ag
 - Python 3.11+
 - Git
 - Neon Postgres account (free): neon.tech
+
+### **Steps**
 1. Clone & Install
 - bash
-- git clone https://github.com/VarunBhatP/nexus-ai-memory.git
-cd nexus-ai-memory
-pip install -r requirements.txt
+- git clone https://github.com/VarunBhatP/Nexus-An-Agent-Memory-Vault
+- cd nexus-ai-memory
+- pip install -r requirements.txt
+
 2. Setup Neon Postgres (2 mins)
 - neon.tech → Sign up → Create project "nexus-memory"
 - Copy DATABASE_URL (looks like: postgresql://user:pass@ep-xxx.neon.tech/db?sslmode=require)
+
 3. Environment Variables
-Create .env file:
+Create .env file as in .env.example file, also create a vitual environment and activate it.
 
 4. Migrate Database
 bash
-# Creates tables + adds test memories
-python migrate.py
+- python migrate.py
 5. Run Server
 bash
-uvicorn app.main:app --reload
+- uvicorn app.main:app --reload
 6. Test
-text
-✅ Frontend: http://localhost:8000/
-✅ API Docs: http://localhost:8000/docs
-✅ Add Memory: POST /memories/ (use /docs)
-✅ Search: Type "NVIDIA" in frontend
-Production
-text
-✅ Persistent Neon Postgres (FREE forever)
-✅ Docker ready
-✅ Render deployment (FREE tier)
-✅ Shared memory across AI agents
+- Frontend: http://localhost:8000/
+- API Docs: http://localhost:8000/docs
+- Add Memory: POST /memories/ (use /docs)
+- Search: Type "NVIDIA" in frontend
+
+## Production
+- Persistent Neon Postgres (FREE forever)
+- Docker ready
+- Render deployment (FREE tier)
+- Shared memory across AI agents
 API Usage (For Agents)
 bash
 # Add memory
