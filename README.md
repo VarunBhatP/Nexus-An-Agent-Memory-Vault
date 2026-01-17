@@ -1,6 +1,6 @@
 # Nexus AI Memory 🧠
 
-**Live Demo:** https://nexus-api.onrender.com
+**Live Demo:** https://nexus-api-258a.onrender.com
 
 Semantic memory search for agentic AI systems. Shared memory across different agents.
 
@@ -71,7 +71,7 @@ curl "http://localhost:8000/memories/search?q=NVIDIA"
 9. Deploy → 3 minutes → LIVE!
 
 ## Test Live Deployment:
-- https://nexus-api.onrender.com/ → Frontend works
-- https://nexus-api.onrender.com/docs → API docs
+- https://nexus-api-258a.onrender.com/ → Frontend works
+- https://nexus-api-258a.onrender.com/docs → API docs
 - POST memory → Persists in Neon
 - Search "Tesla" → Returns moneytrust memory
